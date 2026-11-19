@@ -1,0 +1,221 @@
+import { createRoot } from 'react-dom/client'
+import {
+  ArrowDown, ArrowDownRight, ArrowRight, ArrowUpRight, ChartNoAxesColumn,
+  CircleCheck, Database, FileText, FolderGit2, LayoutGrid, Play, ShoppingBag,
+  Workflow, type LucideIcon,
+} from 'lucide-react'
+import { OrderJourney } from './OrderJourney'
+import './styles.css'
+
+type ResourceDetails = {
+  title: string
+  description: string
+  linkLabel: string
+  url?: string
+}
+
+type WorkflowStep = {
+  title: string
+  description: string
+  icon: LucideIcon
+  githubUrl?: string
+  implementationStatus?: string
+}
+
+type ConfirmedPlan = {
+  title: string
+  description: string
+}
+
+const ingestionCodeUrl: string | undefined = undefined
+
+const workflowSteps: WorkflowStep[] = [
+  { title: 'Data Ingestion', description: 'Collect order data from the online store.', icon: ShoppingBag, githubUrl: ingestionCodeUrl },
+  { title: 'Storage', description: 'Keep collected orders available for later processing.', icon: Database, implementationStatus: 'Storage technology details unavailable' },
+  { title: 'dbt Transformations', description: 'Use dbt to organize order data for analysis.', icon: Workflow },
+  { title: 'Analytics Marts', description: 'Bring the data needed for analysis together in data marts.', icon: LayoutGrid },
+  { title: 'Data Studio', description: 'Show the prepared data in a Data Studio dashboard.', icon: ChartNoAxesColumn },
+]
+
+const demoVideo: ResourceDetails = { title: 'Watch the Workflow Run', description: 'See how an online order makes its way to the dashboard.', linkLabel: 'Watch the Workflow Run' }
+const liveDashboard: ResourceDetails = { title: 'Explore the Live Dashboard', description: 'Explore the order data in Data Studio.', linkLabel: 'Explore the Live Dashboard' }
+const presentation: ResourceDetails = { title: 'View the Slide Deck', description: 'Slides covering the project background and workflow.', linkLabel: 'View the Slide Deck' }
+const github: ResourceDetails = { title: 'View the Code on GitHub', description: 'Find the implementation code and technical details for each step.', linkLabel: 'View the Code on GitHub' }
+const confirmedPlans: ConfirmedPlan[] = [
+  {
+    title: 'Online and In-Store Order Analysis',
+    description: 'Combine online and in-store order data to understand what sells across channels.',
+  },
+]
+
+function getPublicUrl(value?: string) {
+  if (!value?.trim()) return undefined
+
+  try {
+    const url = new URL(value)
+    if ((url.protocol === 'https:' || url.protocol === 'http:') && !url.username && !url.password) {
+      return url.href
+    }
+  } catch {
+    return undefined
+  }
+  return undefined
+}
+
+function ResourceAccess({ url, label, unavailable = 'Resource unavailable' }: {
+  url?: string
+  label: string
+  unavailable?: string
+}) {
+  const publicUrl = getPublicUrl(url)
+
+  return publicUrl ? (
+    <a className="resource-link" href={publicUrl}>{label}<ArrowUpRight size={15} aria-hidden="true" /></a>
+  ) : (
+    <span className="resource-status">{unavailable}</span>
+  )
+}
+
+function ResourceCard({ resource, icon: Icon, unavailable }: {
+  resource: ResourceDetails
+  icon: LucideIcon
+  unavailable?: string
+}) {
+  return (
+    <article className="resource-card">
+      <span className="tile"><Icon size={21} aria-hidden="true" /></span>
+      <div>
+        <h3>{resource.title}</h3>
+        <p>{resource.description}</p>
+        <ResourceAccess url={resource.url} label={resource.linkLabel} unavailable={unavailable} />
+      </div>
+    </article>
+  )
+}
+
+function BrandMark() {
+  return <span className="brand-mark" aria-hidden="true"><i /><i /><i /><i /></span>
+}
+
+function HeroIllustration() {
+  return (
+    <figure className="hero-figure">
+      <div className="figure-heading"><span className="figure-dot" />Online Analytics</div>
+      <div className="figure-path" aria-hidden="true">
+        <div className="figure-node"><ShoppingBag /><span>Order</span></div>
+        <span className="connector"><ArrowRight /></span>
+        <div className="figure-node figure-node-center"><Database /><span>Data</span></div>
+        <span className="connector"><ArrowRight /></span>
+        <div className="figure-node"><ChartNoAxesColumn /><span>Dashboard</span></div>
+      </div>
+      <figcaption><span>How order data reaches the dashboard</span><ArrowDownRight size={19} aria-hidden="true" /></figcaption>
+    </figure>
+  )
+}
+
+function WorkflowSection() {
+  return (
+    <section id="workflow" className="section workflow-section" aria-labelledby="workflow-title">
+      <div className="section-heading">
+        <h2 id="workflow-title">Online Analytics Workflow</h2>
+        <span className="completed"><CircleCheck size={16} aria-hidden="true" />Implemented in v0.1</span>
+      </div>
+      <ol className="workflow-grid">
+        {workflowSteps.map(({ title, description, icon: Icon, githubUrl, implementationStatus }, index) => (
+          <li className="step-card" key={title}>
+            <div className="step-top">
+              <span className="tile"><Icon size={22} aria-hidden="true" /></span>
+              <span className="step-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            </div>
+            <h3>{title}</h3>
+            <p>{description}</p>
+            {implementationStatus && <span className="resource-status storage-status">{implementationStatus}</span>}
+            <ResourceAccess url={githubUrl} label={`View ${title} code on GitHub`} unavailable="GitHub link unavailable" />
+          </li>
+        ))}
+      </ol>
+      <ResourceCard resource={demoVideo} icon={Play} unavailable="Video unavailable" />
+    </section>
+  )
+}
+
+function ProjectStory() {
+  return (
+    <section className="section" aria-labelledby="story-title">
+      <div className="section-heading"><h2 id="story-title">Why I Built This Project</h2></div>
+      <div className="project-story">
+        <p>When I moved to Canada, I was curious about how often I saw specialty chocolate shops and how people gave chocolate as gifts for special occasions. A Purdys shop near my home got me looking into how chocolate retailers sell across stores and online.</p>
+        <p>That raised a data question: <strong>How could a retailer bring online and in-store orders together to understand what sells across channels?</strong> I created <em>Charlie’s Chocolate Factory</em>, a fictional retailer, to explore that question with simulated commerce data.</p>
+        <p>I started with online orders. For v0.1, I built an end-to-end workflow that ingests and stores order data, transforms it with dbt, prepares it for analysis in data marts, and visualizes it in Data Studio. Combining online and in-store data for analysis is a future milestone.</p>
+      </div>
+    </section>
+  )
+}
+
+function App() {
+  return (
+    <>
+      <header className="site-header">
+        <div className="shell header-inner">
+          <a className="brand" href="#top"><BrandMark /><span>Chocolate Commerce</span></a>
+          <nav aria-label="Main navigation">
+            <a href="#workflow">Workflow</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#resources">Project Resources</a>
+          </nav>
+        </div>
+      </header>
+      <main id="top" className="shell">
+        <section className="hero" aria-labelledby="hero-title">
+          <div>
+            <p className="project-name">Chocolate Commerce · A Data Engineering Portfolio Project</p>
+            <h1 id="hero-title">From Online Orders <span>to a Dashboard</span></h1>
+            <p className="hero-description">Follow an online order from a fictional chocolate shop through data collection, storage, and transformation in dbt, all the way to a Data Studio dashboard.</p>
+            <a className="primary-link" href="#workflow">Explore the Workflow <ArrowDown size={17} aria-hidden="true" /></a>
+          </div>
+          <HeroIllustration />
+        </section>
+
+        <ProjectStory />
+        <OrderJourney ingestionCodeUrl={ingestionCodeUrl} getPublicUrl={getPublicUrl} />
+        <WorkflowSection />
+
+        <section id="dashboard" className="section" aria-labelledby="dashboard-title">
+          <div className="section-heading"><h2 id="dashboard-title">Dashboard Walkthrough</h2></div>
+          <div className="dashboard-grid">
+            <article className="dashboard-placeholder">
+              <ChartNoAxesColumn size={28} aria-hidden="true" />
+              <p>Dashboard screenshots and metrics unavailable</p>
+            </article>
+            <ResourceCard resource={liveDashboard} icon={ArrowUpRight} unavailable="Public link unavailable" />
+          </div>
+        </section>
+
+        <section className="section" aria-labelledby="plans-title">
+          <div className="section-heading"><h2 id="plans-title">What’s Next</h2></div>
+          {confirmedPlans.length > 0 ? (
+            <ul className="plan-list">
+              {confirmedPlans.map((plan) => (
+                <li key={plan.title}><span className="resource-status">Planned</span><h3>{plan.title}</h3><p>{plan.description}</p></li>
+              ))}
+            </ul>
+          ) : <p className="plan-empty">Future milestones will appear here once confirmed.</p>}
+        </section>
+
+        <section id="resources" className="section resources-section" aria-labelledby="resources-title">
+          <div className="section-heading"><h2 id="resources-title">Project Resources</h2></div>
+          <div className="resources-grid">
+            <ResourceCard resource={presentation} icon={FileText} unavailable="Slide deck unavailable" />
+            <ResourceCard resource={github} icon={FolderGit2} unavailable="Repository link unavailable" />
+          </div>
+        </section>
+      </main>
+      <footer><div className="shell footer-inner"><span>Chocolate Commerce Data Engineering</span><span>v0.1</span></div></footer>
+    </>
+  )
+}
+
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('The portfolio root element is missing.')
+
+createRoot(rootElement).render(<App />)
