@@ -85,7 +85,11 @@ figcaption { @apply justify-between; border-top: 1px solid #966b54; padding-top:
 .resource-card p { margin-block: 5px 8px; }
 .dashboard-grid { @apply grid; grid-template-columns: 1.6fr 1fr; gap: 14px; }
 .dashboard-grid .resource-card { align-items: center; }
-.dashboard-placeholder { @apply grid place-content-center justify-items-center; min-height: 152px; gap: 9px; padding: 16px; text-align: center; border: 1px dashed #ae8265; border-radius: 13px; background: #faeddf; color: #75482d; font-size: .86rem; font-weight: 700; }
+.dashboard-screenshots { @apply grid; gap: 14px; min-width: 0; }
+.dashboard-screenshots figure { margin: 0; padding: 12px; border: 1px solid #e8d9ca; border-radius: 13px; background: #fff; }
+.dashboard-screenshots img { display: block; width: 100%; height: auto; border-radius: 6px; }
+.dashboard-screenshots figcaption { margin-top: 8px; font-weight: 700; }
+.dashboard-grid .resource-card { align-self: start; }
 .resources-grid, .plan-list { @apply grid grid-cols-2; gap: 14px; }
 .plan-empty, .plan-list li { padding: 17px 19px; }
 .plan-list h3 { margin-block: 4px; }

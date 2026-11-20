@@ -5,6 +5,8 @@ import {
   Workflow, type LucideIcon,
 } from 'lucide-react'
 import { OrderJourney } from './OrderJourney'
+import onlineSalesScreenshot from './assets/data_studio_online_sales.png'
+import onlineProductScreenshot from './assets/data_studio_online_product.png'
 import './styles.css'
 
 type ResourceDetails = {
@@ -39,7 +41,12 @@ const workflowSteps: WorkflowStep[] = [
 ]
 
 const demoVideo: ResourceDetails = { title: 'Watch the Workflow Run', description: 'See how an online order makes its way to the dashboard.', linkLabel: 'Watch the Workflow Run' }
-const liveDashboard: ResourceDetails = { title: 'Explore the Live Dashboard', description: 'Explore the order data in Data Studio.', linkLabel: 'Explore the Live Dashboard' }
+const liveDashboard: ResourceDetails = {
+  title: 'Explore the Live Dashboard',
+  description: 'Choose a date range to explore simulated online orders, order amounts, and top-selling products.',
+  linkLabel: 'Explore the Live Dashboard',
+  url: 'https://datastudio.google.com/s/mVx1mF2GxU4',
+}
 const presentation: ResourceDetails = { title: 'View the Slide Deck', description: 'Slides covering the project background and workflow.', linkLabel: 'View the Slide Deck' }
 const github: ResourceDetails = { title: 'View the Code on GitHub', description: 'Find the implementation code and technical details for each step.', linkLabel: 'View the Code on GitHub', url: githubRepositoryUrl }
 const confirmedPlans: ConfirmedPlan[] = [
@@ -184,10 +191,16 @@ function App() {
         <section id="dashboard" className="section" aria-labelledby="dashboard-title">
           <div className="section-heading"><h2 id="dashboard-title">Dashboard Walkthrough</h2></div>
           <div className="dashboard-grid">
-            <article className="dashboard-placeholder">
-              <ChartNoAxesColumn size={28} aria-hidden="true" />
-              <p>Dashboard screenshots and metrics unavailable</p>
-            </article>
+            <div className="dashboard-screenshots">
+              <figure>
+                <img src={onlineSalesScreenshot} alt="Online order counts and amounts with monthly trends" loading="lazy" width={991} height={745} />
+                <figcaption>Online Sales Overview</figcaption>
+              </figure>
+              <figure>
+                <img src={onlineProductScreenshot} alt="Top five online products and category totals by units sold" loading="lazy" width={990} height={741} />
+                <figcaption>Online Product Performance</figcaption>
+              </figure>
+            </div>
             <ResourceCard resource={liveDashboard} icon={ArrowUpRight} unavailable="Public link unavailable" />
           </div>
         </section>
