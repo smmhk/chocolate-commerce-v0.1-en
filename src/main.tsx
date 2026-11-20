@@ -27,7 +27,8 @@ type ConfirmedPlan = {
   description: string
 }
 
-const ingestionCodeUrl: string | undefined = undefined
+const githubRepositoryUrl = 'https://github.com/smmhk/chocolate-commerce-data-platform'
+const ingestionCodeUrl = `${githubRepositoryUrl}/blob/main/orchestration/kestra/flows/chocolate/workflows/chocolate.online_raw_ingestion.yaml`
 
 const workflowSteps: WorkflowStep[] = [
   { title: 'Data Ingestion', description: 'Collect order data from the online store.', icon: ShoppingBag, githubUrl: ingestionCodeUrl },
@@ -40,7 +41,7 @@ const workflowSteps: WorkflowStep[] = [
 const demoVideo: ResourceDetails = { title: 'Watch the Workflow Run', description: 'See how an online order makes its way to the dashboard.', linkLabel: 'Watch the Workflow Run' }
 const liveDashboard: ResourceDetails = { title: 'Explore the Live Dashboard', description: 'Explore the order data in Data Studio.', linkLabel: 'Explore the Live Dashboard' }
 const presentation: ResourceDetails = { title: 'View the Slide Deck', description: 'Slides covering the project background and workflow.', linkLabel: 'View the Slide Deck' }
-const github: ResourceDetails = { title: 'View the Code on GitHub', description: 'Find the implementation code and technical details for each step.', linkLabel: 'View the Code on GitHub' }
+const github: ResourceDetails = { title: 'View the Code on GitHub', description: 'Find the implementation code and technical details for each step.', linkLabel: 'View the Code on GitHub', url: githubRepositoryUrl }
 const confirmedPlans: ConfirmedPlan[] = [
   {
     title: 'Online and In-Store Order Analysis',

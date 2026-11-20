@@ -9,7 +9,8 @@ type DemoSource = {
   title: string
   description: string
   screenshotLabel: string
-  screenshot?: Screenshot
+  screenshotPath: string
+  screenshotAlt: string
   linkLabel: string
   url?: string
   icon: LucideIcon
@@ -23,18 +24,30 @@ type OrderEvidence = {
   metric?: { explanation: string; screenshot?: Screenshot }
 }
 
+const demoScreenshots = import.meta.glob<string>('./assets/demo-*.{png,jpg}', {
+  eager: true,
+  import: 'default',
+  query: '?url',
+})
+
 const demoSources: DemoSource[] = [
   {
     title: 'Online Store',
     description: 'This is where the online orders used in the v0.1 analytics workflow are created.',
-    screenshotLabel: 'Order confirmation or order history screenshot pending',
+    screenshotLabel: 'Storefront screenshot pending',
+    screenshotPath: './assets/demo-online-store',
+    screenshotAlt: 'Charlie’s Chocolate Factory online shop with chocolate products and Add to cart buttons',
+    url: 'https://chocoflavor.dev/',
     linkLabel: 'Visit the Demo Store',
     icon: ShoppingBag,
   },
   {
     title: 'In-Store POS',
     description: 'This demo simulates in-store sales. Combining in-store and online data for analytics is a future milestone.',
-    screenshotLabel: 'In-store sale screenshot pending',
+    screenshotLabel: 'POS register screenshot pending',
+    screenshotPath: './assets/demo-pos',
+    screenshotAlt: 'Burnaby POS register showing the product grid and order cart side by side',
+    url: 'https://chocoflavor.dev/pos',
     linkLabel: 'Try the POS Demo',
     icon: Store,
   },
@@ -77,11 +90,15 @@ export function OrderJourney({ ingestionCodeUrl, getPublicUrl }: {
         <div className="source-grid">
           {demoSources.map((source) => {
             const publicUrl = getPublicUrl(source.url)
+            const screenshotUrl = demoScreenshots[`${source.screenshotPath}.png`] ??
+              demoScreenshots[`${source.screenshotPath}.jpg`]
+            const screenshot = screenshotUrl ? { src: screenshotUrl, alt: source.screenshotAlt } : undefined
+
             return (
               <article key={source.title} className="evidence-card">
                 <h3>{source.title}</h3>
                 <p>{source.description}</p>
-                <EvidencePreview screenshot={source.screenshot} placeholder={source.screenshotLabel} icon={source.icon} />
+                <EvidencePreview screenshot={screenshot} placeholder={source.screenshotLabel} icon={source.icon} />
                 {publicUrl && <a className="resource-link" href={publicUrl}>{source.linkLabel}<ArrowUpRight size={15} aria-hidden="true" /></a>}
               </article>
             )
