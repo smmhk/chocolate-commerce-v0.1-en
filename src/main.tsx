@@ -34,9 +34,24 @@ const ingestionCodeUrl = `${githubRepositoryUrl}/blob/main/orchestration/kestra/
 
 const workflowSteps: WorkflowStep[] = [
   { title: 'Data Ingestion', description: 'Collect order data from the online store.', icon: ShoppingBag, githubUrl: ingestionCodeUrl },
-  { title: 'Storage', description: 'Keep collected orders available for later processing.', icon: Database, implementationStatus: 'Storage technology details unavailable' },
-  { title: 'dbt Transformations', description: 'Use dbt to organize order data for analysis.', icon: Workflow },
-  { title: 'Analytics Marts', description: 'Bring the data needed for analysis together in data marts.', icon: LayoutGrid },
+  {
+    title: 'Storage',
+    description: 'Export online orders from PostgreSQL to Cloud Storage as CSV files, then load them into BigQuery for analysis.',
+    icon: Database,
+    githubUrl: `${githubRepositoryUrl}/blob/main/orchestration/kestra/flows/chocolate/to_bigquery/online/chocolate.online_orders_to_file.yaml`,
+  },
+  {
+    title: 'dbt Transformations',
+    description: 'Join each order item to its order and product records to add order status, sales date, and product details.',
+    icon: Workflow,
+    githubUrl: `${githubRepositoryUrl}/blob/main/chocolate_dbt/models/intermediate/int_online_order_items_enriched.sql`,
+  },
+  {
+    title: 'Analytics Marts',
+    description: 'Summarize completed orders by day and product to report units sold, distinct orders, and line-item totals in CAD.',
+    icon: LayoutGrid,
+    githubUrl: `${githubRepositoryUrl}/blob/main/chocolate_dbt/models/marts/mart_online_product_sales.sql`,
+  },
   { title: 'Data Studio', description: 'Show the prepared data in a Data Studio dashboard.', icon: ChartNoAxesColumn },
 ]
 
