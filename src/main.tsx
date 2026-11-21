@@ -45,7 +45,7 @@ const liveDashboard: ResourceDetails = {
   title: 'Explore the Live Dashboard',
   description: 'Choose a date range to explore simulated online orders, order amounts, and top-selling products.',
   linkLabel: 'Explore the Live Dashboard',
-  url: 'https://datastudio.google.com/s/mVx1mF2GxU4',
+  url: 'https://datastudio.google.com/s/oscBmjlO6JM',
 }
 const presentation: ResourceDetails = { title: 'View the Slide Deck', description: 'Slides covering the project background and workflow.', linkLabel: 'View the Slide Deck' }
 const github: ResourceDetails = { title: 'View the Code on GitHub', description: 'Find the implementation code and technical details for each step.', linkLabel: 'View the Code on GitHub', url: githubRepositoryUrl }

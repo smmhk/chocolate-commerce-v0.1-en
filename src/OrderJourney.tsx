@@ -20,11 +20,12 @@ type OrderEvidence = {
   orderId?: string
   orderScreenshot?: Screenshot
   collectedRecord?: string
+  collectedScreenshot?: Screenshot
   ingestion?: { source: string; method: string; initialStorage: string }
   metric?: { explanation: string; screenshot?: Screenshot }
 }
 
-const demoScreenshots = import.meta.glob<string>('./assets/demo-*.{png,jpg}', {
+const screenshots = import.meta.glob<string>('./assets/{demo-,order-}*.{png,jpg,jpeg,webp}', {
   eager: true,
   import: 'default',
   query: '?url',
@@ -53,7 +54,33 @@ const demoSources: DemoSource[] = [
   },
 ]
 
-const sampleOrder: OrderEvidence = {}
+function getScreenshot(path: string, alt: string): Screenshot | undefined {
+  const src = ['png', 'jpg', 'jpeg', 'webp']
+    .map((extension) => screenshots[`${path}.${extension}`])
+    .find(Boolean)
+
+  return src ? { src, alt } : undefined
+}
+
+const sampleOrder: OrderEvidence = {
+  orderId: 'CCF-WEB-000014',
+  orderScreenshot: getScreenshot(
+    './assets/order-confirmation',
+    'Storefront confirmation for order CCF-WEB-000014 with Processing status',
+  ),
+  collectedScreenshot: getScreenshot(
+    './assets/order-bigquery-record',
+    'BigQuery result for order CCF-WEB-000014 showing Completed status and an order total of CAD 80.72',
+  ),
+  collectedRecord: 'Status: COMPLETED\nOrder total: CAD 80.72',
+  metric: {
+    explanation: 'The September 8, 2026 query results show daily units sold by product: 3 Golden Caramel Crunch, 4 Hazelnut Dream Bar, and 2 Midnight Dark Chocolate Bar.',
+    screenshot: getScreenshot(
+      './assets/order-product-sales',
+      'BigQuery query results showing daily units sold for three chocolate products',
+    ),
+  },
+}
 
 function EvidencePreview({ screenshot, placeholder, icon: Icon }: {
   screenshot?: Screenshot
@@ -79,7 +106,7 @@ export function OrderJourney({ ingestionCodeUrl, getPublicUrl }: {
   ingestionCodeUrl?: string
   getPublicUrl: (value?: string) => string | undefined
 }) {
-  const { orderId, orderScreenshot, collectedRecord, ingestion, metric } = sampleOrder
+  const { orderId, orderScreenshot, collectedRecord, collectedScreenshot, ingestion, metric } = sampleOrder
   const publicIngestionCodeUrl = getPublicUrl(ingestionCodeUrl)
 
   return (
@@ -90,9 +117,7 @@ export function OrderJourney({ ingestionCodeUrl, getPublicUrl }: {
         <div className="source-grid">
           {demoSources.map((source) => {
             const publicUrl = getPublicUrl(source.url)
-            const screenshotUrl = demoScreenshots[`${source.screenshotPath}.png`] ??
-              demoScreenshots[`${source.screenshotPath}.jpg`]
-            const screenshot = screenshotUrl ? { src: screenshotUrl, alt: source.screenshotAlt } : undefined
+            const screenshot = getScreenshot(source.screenshotPath, source.screenshotAlt)
 
             return (
               <article key={source.title} className="evidence-card">
@@ -112,22 +137,23 @@ export function OrderJourney({ ingestionCodeUrl, getPublicUrl }: {
           <li className="evidence-card">
             <h3>An order is placed</h3>
             <SampleOrderId orderId={orderId} />
-            <EvidencePreview screenshot={orderScreenshot} placeholder="Order screenshot with products and quantities pending" icon={ShoppingBag} />
+            <EvidencePreview screenshot={orderScreenshot} placeholder="Placed on September 8, 2026 · Processing" icon={ShoppingBag} />
           </li>
           <li className="evidence-card ingestion-evidence">
             <h3>The order is collected</h3>
             <SampleOrderId orderId={orderId} />
             {collectedRecord?.trim()
               ? <pre className="collected-record"><code>{collectedRecord}</code></pre>
-              : <EvidencePreview placeholder="Collected record excerpt pending" icon={Database} />}
+              : null}
+            {collectedScreenshot && <EvidencePreview screenshot={collectedScreenshot} placeholder="BigQuery order record" icon={Database} />}
             <p>{ingestion
               ? `The workflow reads orders from ${ingestion.source} using ${ingestion.method} and first stores them in ${ingestion.initialStorage}.`
-              : 'Ingestion source, collection method, and initial storage details pending.'}</p>
+              : 'The same order ID appears in BigQuery after the order is marked completed.'}</p>
             {publicIngestionCodeUrl && <a className="resource-link" href={publicIngestionCodeUrl}>View the Ingestion Code<ArrowUpRight size={15} aria-hidden="true" /></a>}
           </li>
           <li className="evidence-card">
-            <h3>The order contributes to a dashboard metric</h3>
-            <EvidencePreview screenshot={metric?.screenshot} placeholder="Data Studio metric or chart pending" icon={ChartNoAxesColumn} />
+            <h3>Sales are aggregated by product</h3>
+            <EvidencePreview screenshot={metric?.screenshot} placeholder="Daily units sold by product" icon={ChartNoAxesColumn} />
             <p>{metric?.explanation ?? 'An example of how this order contributes to an aggregate metric is pending.'}</p>
           </li>
         </ol>
