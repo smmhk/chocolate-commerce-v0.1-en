@@ -196,7 +196,7 @@ function App() {
                 <img src={onlineSalesScreenshot} alt="Online order counts and amounts with monthly trends" loading="lazy" width={991} height={745} />
                 <figcaption>Online Sales Overview</figcaption>
               </figure>
-              <figure>
+              <figure id="online-product-performance">
                 <img src={onlineProductScreenshot} alt="Top five online products and category totals by units sold" loading="lazy" width={990} height={741} />
                 <figcaption>Online Product Performance</figcaption>
               </figure>

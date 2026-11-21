@@ -147,6 +147,9 @@ footer { border-top: 1px solid var(--line); }
   text-align: center;
 }
 .evidence-screenshot { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 9px; }
+.evidence-image-link { display: grid; gap: 6px; flex-shrink: 0; }
+.evidence-image-link:hover .resource-link { text-decoration: underline; text-underline-offset: 4px; }
+#online-product-performance { scroll-margin-top: 24px; }
 .ingestion-evidence { border-color: #ae8265; background: #fbefe2; }
 .sample-order-id { font-weight: 700; }
 .sample-order-id code { overflow-wrap: anywhere; }

@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, ChartNoAxesColumn, Database, ShoppingBag, Sto
 type Screenshot = {
   src: string
   alt: string
+  dimensions?: { width: number; height: number }
 }
 
 type DemoSource = {
@@ -54,12 +55,12 @@ const demoSources: DemoSource[] = [
   },
 ]
 
-function getScreenshot(path: string, alt: string): Screenshot | undefined {
+function getScreenshot(path: string, alt: string, dimensions?: Screenshot['dimensions']): Screenshot | undefined {
   const src = ['png', 'jpg', 'jpeg', 'webp']
     .map((extension) => screenshots[`${path}.${extension}`])
     .find(Boolean)
 
-  return src ? { src, alt } : undefined
+  return src ? { src, alt, dimensions } : undefined
 }
 
 const sampleOrder: OrderEvidence = {
@@ -67,31 +68,51 @@ const sampleOrder: OrderEvidence = {
   orderScreenshot: getScreenshot(
     './assets/order-confirmation',
     'Storefront confirmation for order CCF-WEB-000014 with Processing status',
+    { width: 1828, height: 860 },
   ),
   collectedScreenshot: getScreenshot(
     './assets/order-bigquery-record',
     'BigQuery result for order CCF-WEB-000014 showing Completed status and an order total of CAD 80.72',
+    { width: 912, height: 171 },
   ),
   collectedRecord: 'Status: COMPLETED\nOrder total: CAD 80.72',
   metric: {
-    explanation: 'The September 8, 2026 query results show daily units sold by product: 3 Golden Caramel Crunch, 4 Hazelnut Dream Bar, and 2 Midnight Dark Chocolate Bar.',
+    explanation: 'The September 8, 2026 daily totals across online orders show: 3 Golden Caramel Crunch, 4 Hazelnut Dream Bar, and 2 Midnight Dark Chocolate Bar.',
     screenshot: getScreenshot(
       './assets/order-product-sales',
       'BigQuery query results showing daily units sold for three chocolate products',
+      { width: 852, height: 275 },
     ),
   },
 }
 
-function EvidencePreview({ screenshot, placeholder, icon: Icon }: {
+function EvidencePreview({ screenshot, placeholder, icon: Icon, fullSizeLabel }: {
   screenshot?: Screenshot
   placeholder: string
   icon: LucideIcon
+  fullSizeLabel?: string
 }) {
-  return screenshot?.src.trim() && screenshot.alt.trim() ? (
-    <img className="evidence-screenshot" src={screenshot.src} alt={screenshot.alt} loading="lazy" />
-  ) : (
-    <div className="evidence-preview"><Icon size={24} aria-hidden="true" /><span>{placeholder}</span></div>
+  if (!screenshot?.src.trim() || !screenshot.alt.trim()) {
+    return <div className="evidence-preview"><Icon size={24} aria-hidden="true" /><span>{placeholder}</span></div>
+  }
+
+  const preview = (
+    <img
+      className="evidence-screenshot"
+      src={screenshot.src}
+      alt={screenshot.alt}
+      width={screenshot.dimensions?.width}
+      height={screenshot.dimensions?.height}
+      loading="lazy"
+    />
   )
+
+  return fullSizeLabel ? (
+    <a className="evidence-image-link" href={screenshot.src} target="_blank" rel="noopener noreferrer">
+      {preview}
+      <span className="resource-link">{fullSizeLabel}<ArrowUpRight size={15} aria-hidden="true" /></span>
+    </a>
+  ) : preview
 }
 
 function SampleOrderId({ orderId }: { orderId?: string }) {
@@ -137,7 +158,7 @@ export function OrderJourney({ ingestionCodeUrl, getPublicUrl }: {
           <li className="evidence-card">
             <h3>An order is placed</h3>
             <SampleOrderId orderId={orderId} />
-            <EvidencePreview screenshot={orderScreenshot} placeholder="Placed on September 8, 2026 · Processing" icon={ShoppingBag} />
+            <EvidencePreview screenshot={orderScreenshot} placeholder="Placed on September 8, 2026 · Processing" icon={ShoppingBag} fullSizeLabel="Open order confirmation" />
           </li>
           <li className="evidence-card ingestion-evidence">
             <h3>The order is collected</h3>
@@ -145,7 +166,7 @@ export function OrderJourney({ ingestionCodeUrl, getPublicUrl }: {
             {collectedRecord?.trim()
               ? <pre className="collected-record"><code>{collectedRecord}</code></pre>
               : null}
-            {collectedScreenshot && <EvidencePreview screenshot={collectedScreenshot} placeholder="BigQuery order record" icon={Database} />}
+            {collectedScreenshot && <EvidencePreview screenshot={collectedScreenshot} placeholder="BigQuery order record" icon={Database} fullSizeLabel="Open BigQuery order record" />}
             <p>{ingestion
               ? `The workflow reads orders from ${ingestion.source} using ${ingestion.method} and first stores them in ${ingestion.initialStorage}.`
               : 'The same order ID appears in BigQuery after the order is marked completed.'}</p>
@@ -153,13 +174,13 @@ export function OrderJourney({ ingestionCodeUrl, getPublicUrl }: {
           </li>
           <li className="evidence-card">
             <h3>Sales are aggregated by product</h3>
-            <EvidencePreview screenshot={metric?.screenshot} placeholder="Daily units sold by product" icon={ChartNoAxesColumn} />
+            <EvidencePreview screenshot={metric?.screenshot} placeholder="Daily units sold by product" icon={ChartNoAxesColumn} fullSizeLabel="Open product sales results" />
             <p>{metric?.explanation ?? 'An example of how this order contributes to an aggregate metric is pending.'}</p>
           </li>
         </ol>
         <div className="journey-links">
           <a className="resource-link" href="#workflow">Explore the Workflow<ArrowRight size={15} aria-hidden="true" /></a>
-          <a className="resource-link" href="#dashboard">Dashboard Walkthrough<ArrowRight size={15} aria-hidden="true" /></a>
+          <a className="resource-link" href="#online-product-performance">See the Online Product Performance chart<ArrowRight size={15} aria-hidden="true" /></a>
         </div>
       </section>
     </>
