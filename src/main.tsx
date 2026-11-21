@@ -20,8 +20,8 @@ type WorkflowStep = {
   title: string
   description: string
   icon: LucideIcon
-  githubUrl?: string
-  implementationStatus?: string
+  url: string
+  linkLabel?: string
 }
 
 type ConfirmedPlan = {
@@ -32,36 +32,43 @@ type ConfirmedPlan = {
 const githubRepositoryUrl = 'https://github.com/smmhk/chocolate-commerce-data-platform'
 const ingestionCodeUrl = `${githubRepositoryUrl}/blob/main/orchestration/kestra/flows/chocolate/workflows/chocolate.online_raw_ingestion.yaml`
 
+const liveDashboard = {
+  title: 'Explore the Live Dashboard',
+  description: 'Choose a date range to explore simulated online orders, order amounts, and top-selling products.',
+  linkLabel: 'Explore the Live Dashboard',
+  url: 'https://datastudio.google.com/s/oscBmjlO6JM',
+} satisfies ResourceDetails
+
 const workflowSteps: WorkflowStep[] = [
-  { title: 'Data Ingestion', description: 'Collect order data from the online store.', icon: ShoppingBag, githubUrl: ingestionCodeUrl },
+  { title: 'Data Ingestion', description: 'Collect order data from the online store.', icon: ShoppingBag, url: ingestionCodeUrl },
   {
     title: 'Storage',
     description: 'Export online orders from PostgreSQL to Cloud Storage as CSV files, then load them into BigQuery for analysis.',
     icon: Database,
-    githubUrl: `${githubRepositoryUrl}/blob/main/orchestration/kestra/flows/chocolate/to_bigquery/online/chocolate.online_orders_to_file.yaml`,
+    url: `${githubRepositoryUrl}/blob/main/orchestration/kestra/flows/chocolate/to_bigquery/online/chocolate.online_orders_to_file.yaml`,
   },
   {
     title: 'dbt Transformations',
     description: 'Join each order item to its order and product records to add order status, sales date, and product details.',
     icon: Workflow,
-    githubUrl: `${githubRepositoryUrl}/blob/main/chocolate_dbt/models/intermediate/int_online_order_items_enriched.sql`,
+    url: `${githubRepositoryUrl}/blob/main/chocolate_dbt/models/intermediate/int_online_order_items_enriched.sql`,
   },
   {
     title: 'Analytics Marts',
     description: 'Summarize completed orders by day and product to report units sold, distinct orders, and line-item totals in CAD.',
     icon: LayoutGrid,
-    githubUrl: `${githubRepositoryUrl}/blob/main/chocolate_dbt/models/marts/mart_online_product_sales.sql`,
+    url: `${githubRepositoryUrl}/blob/main/chocolate_dbt/models/marts/mart_online_product_sales.sql`,
   },
-  { title: 'Data Studio', description: 'Show the prepared data in a Data Studio dashboard.', icon: ChartNoAxesColumn },
+  {
+    title: 'Data Studio',
+    description: 'Show the prepared data in a Data Studio dashboard.',
+    icon: ChartNoAxesColumn,
+    url: liveDashboard.url,
+    linkLabel: liveDashboard.linkLabel,
+  },
 ]
 
 const demoVideo: ResourceDetails = { title: 'Watch the Workflow Run', description: 'See how an online order makes its way to the dashboard.', linkLabel: 'Watch the Workflow Run' }
-const liveDashboard: ResourceDetails = {
-  title: 'Explore the Live Dashboard',
-  description: 'Choose a date range to explore simulated online orders, order amounts, and top-selling products.',
-  linkLabel: 'Explore the Live Dashboard',
-  url: 'https://datastudio.google.com/s/oscBmjlO6JM',
-}
 const presentation: ResourceDetails = { title: 'View the Slide Deck', description: 'Slides covering the project background and workflow.', linkLabel: 'View the Slide Deck' }
 const github: ResourceDetails = { title: 'View the Code on GitHub', description: 'Find the implementation code and technical details for each step.', linkLabel: 'View the Code on GitHub', url: githubRepositoryUrl }
 const confirmedPlans: ConfirmedPlan[] = [
@@ -144,7 +151,7 @@ function WorkflowSection() {
         <span className="completed"><CircleCheck size={16} aria-hidden="true" />Implemented in v0.1</span>
       </div>
       <ol className="workflow-grid">
-        {workflowSteps.map(({ title, description, icon: Icon, githubUrl, implementationStatus }, index) => (
+        {workflowSteps.map(({ title, description, icon: Icon, url, linkLabel }, index) => (
           <li className="step-card" key={title}>
             <div className="step-top">
               <span className="tile"><Icon size={22} aria-hidden="true" /></span>
@@ -152,8 +159,7 @@ function WorkflowSection() {
             </div>
             <h3>{title}</h3>
             <p>{description}</p>
-            {implementationStatus && <span className="resource-status storage-status">{implementationStatus}</span>}
-            <ResourceAccess url={githubUrl} label={`View ${title} code on GitHub`} unavailable="GitHub link unavailable" />
+            <ResourceAccess url={url} label={linkLabel ?? `View ${title} code on GitHub`} />
           </li>
         ))}
       </ol>
@@ -234,7 +240,7 @@ function App() {
         <section id="resources" className="section resources-section" aria-labelledby="resources-title">
           <div className="section-heading"><h2 id="resources-title">Project Resources</h2></div>
           <div className="resources-grid">
-            <ResourceCard resource={presentation} icon={FileText} unavailable="Slide deck unavailable" />
+            <ResourceCard resource={presentation} icon={FileText} unavailable="Slide deck coming soon" />
             <ResourceCard resource={github} icon={FolderGit2} unavailable="Repository link unavailable" />
           </div>
         </section>
