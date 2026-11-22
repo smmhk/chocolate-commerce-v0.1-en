@@ -199,6 +199,11 @@ function App() {
           <div>
             <p className="project-name">Chocolate Commerce · A Data Engineering Portfolio Project</p>
             <h1 id="hero-title">From Online Orders <span>to a Dashboard</span></h1>
+            <p className="developer-intro">
+              Backend Developer transitioning into Data Engineering
+              <span aria-hidden="true"> | </span>
+              Building end-to-end data platforms with Python, SQL, GCP &amp; AI-assisted workflows
+            </p>
             <p className="hero-description">Follow an online order from a fictional chocolate shop through data collection, storage, and transformation in dbt, all the way to a Data Studio dashboard.</p>
             <a className="primary-link" href="#workflow">Explore the Workflow <ArrowDown size={17} aria-hidden="true" /></a>
           </div>
