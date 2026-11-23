@@ -209,8 +209,24 @@ function App() {
               <span aria-hidden="true"> | </span>
               Building end-to-end data platforms with Python, SQL, GCP &amp; AI-assisted workflows
             </p>
-            <p className="hero-description">Follow an online order from a fictional chocolate shop through data collection, storage, and transformation in dbt, all the way to a Data Studio dashboard.</p>
-            <a className="primary-link" href="#workflow">Explore the Workflow <ArrowDown size={17} aria-hidden="true" /></a>
+            <p className="hero-description">
+  I built an end-to-end pipeline that loads simulated online orders into BigQuery,
+  transforms them with dbt, and powers a Data Studio dashboard.
+</p>
+
+<div className="flex flex-wrap items-center gap-x-3">
+  <a className="primary-link" href="#workflow">
+    Explore the Workflow <ArrowDown size={17} aria-hidden="true" />
+  </a>
+  <a
+    className="primary-link"
+    href={liveDashboard.url}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Open the Live Dashboard <ArrowUpRight size={17} aria-hidden="true" />
+  </a>
+</div>
           </div>
           <HeroIllustration />
         </section>
