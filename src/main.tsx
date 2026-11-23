@@ -73,7 +73,7 @@ const presentation: ResourceDetails = {
   title: 'View the Slide Deck',
   description: 'Slides covering the project background and workflow.',
   linkLabel: 'View the Slide Deck',
-  url: 'https://app.slidespeak.co/presentation/cmwsk80sk002p08o4cd83d6g0/share',
+  url: 'https://docs.google.com/presentation/d/10MhdGfXEm0RGOn59qJTu5c5enGqzYqhf/edit?usp=sharing&ouid=101926343363175222297&rtpof=true&sd=true',
 }
 const github: ResourceDetails = { title: 'View the Code on GitHub', description: 'Find the implementation code and technical details for each step.', linkLabel: 'View the Code on GitHub', url: githubRepositoryUrl }
 const confirmedPlans: ConfirmedPlan[] = [
