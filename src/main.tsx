@@ -68,8 +68,13 @@ const workflowSteps: WorkflowStep[] = [
   },
 ]
 
-const demoVideo: ResourceDetails = { title: 'Watch the Workflow Run', description: 'See how an online order makes its way to the dashboard.', linkLabel: 'Watch the Workflow Run' }
-const presentation: ResourceDetails = { title: 'View the Slide Deck', description: 'Slides covering the project background and workflow.', linkLabel: 'View the Slide Deck' }
+const demoVideo: ResourceDetails = { title: 'Watch the Workflow Run', description: 'See how an online order makes its way to the dashboard.', linkLabel: 'Watch the Workflow Run', url: 'https://app.slidespeak.co/presentation/cmwsk80sk002p08o4cd83d6g0/share'}
+const presentation: ResourceDetails = {
+  title: 'View the Slide Deck',
+  description: 'Slides covering the project background and workflow.',
+  linkLabel: 'View the Slide Deck',
+  url: 'https://app.slidespeak.co/presentation/cmwsk80sk002p08o4cd83d6g0/share',
+}
 const github: ResourceDetails = { title: 'View the Code on GitHub', description: 'Find the implementation code and technical details for each step.', linkLabel: 'View the Code on GitHub', url: githubRepositoryUrl }
 const confirmedPlans: ConfirmedPlan[] = [
   {
