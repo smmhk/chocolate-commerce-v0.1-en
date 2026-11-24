@@ -68,7 +68,7 @@ const workflowSteps: WorkflowStep[] = [
   },
 ]
 
-const demoVideo: ResourceDetails = { title: 'Watch the Workflow Run', description: 'See how an online order makes its way to the dashboard.', linkLabel: 'Watch the Workflow Run', url: 'https://app.slidespeak.co/presentation/cmwsk80sk002p08o4cd83d6g0/share'}
+const demoVideo: ResourceDetails = { title: 'Watch the Workflow Run', description: 'See how an online order makes its way to the dashboard.', linkLabel: 'Watch the Workflow Run'}
 const presentation: ResourceDetails = {
   title: 'View the Slide Deck',
   description: 'Slides covering the project background and workflow.',
